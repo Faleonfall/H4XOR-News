@@ -1,18 +1,11 @@
-//
-//  ContentView.swift
-//  H4XOR News
-//
-//  Created by Volodymyr Kryvytskyi on 10.09.2023.
-//
-
 import SwiftUI
 
 struct ContentView: View {
-    
     @StateObject private var networkManager = NetworkManager()
-    
+
     var body: some View {
         NavigationStack {
+            // MARK: - Story List
             List(networkManager.posts) { post in
                 NavigationLink {
                     DetailView(url: post.url)
@@ -29,7 +22,18 @@ struct ContentView: View {
                     .padding(.vertical, 4)
                 }
             }
-            .navigationTitle("H4XOR NEWS")
+            .contentMargins(.top, 0, for: .scrollContent)
+            // MARK: - Title Header
+            .safeAreaInset(edge: .top, spacing: 0) {
+                Text("H4XOR NEWS")
+                    .font(.largeTitle.bold())
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.horizontal, 20)
+                    .padding(.vertical, 16)
+                    .background(Color(.systemGroupedBackground))
+            }
+            .toolbar(.hidden, for: .navigationBar)
+            // MARK: - Loading & Error States
             .overlay {
                 if networkManager.isLoading && networkManager.posts.isEmpty {
                     ProgressView("Loading…")
@@ -57,8 +61,6 @@ struct ContentView: View {
     }
 }
 
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        ContentView()
-    }
+#Preview {
+    ContentView()
 }
